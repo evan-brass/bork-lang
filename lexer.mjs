@@ -1,5 +1,5 @@
 
-class Peekable {
+export class Peekable {
 	#inner;
 	#peeked = [];
 	constructor(inner) {
@@ -26,12 +26,9 @@ class Peekable {
 	}
 }
 
-export class Identifier extends String {}
-export class StringLiteral extends String {}
+export class Ident extends String {}
 
 export class LexError extends Error {}
-
-export const EOF = Symbol('End of a source file.'); // Is this even neccessary?
 
 const reserved_words = [
 	'and', 'class', 'else', 'false', 'fun', 'for', 'if', 'nil', 'or',
@@ -78,6 +75,7 @@ export function* lexer(source_code) {
 			let ret = '';
 			while (i.peek() && i.peek() != '"') ret += i.nextValue();
 			if (i.nextValue() != '"') yield new LexError("Unclosed string literal");
+			yield new String(ret);
 		}
 
 		// Digits:
@@ -90,7 +88,7 @@ export function* lexer(source_code) {
 				while (is_digit.test(i.peek())) ret += i.nextValue();
 			}
 
-			yield Number(ret);
+			yield new Number(ret);
 		}
 
 		// Identifier:
@@ -102,9 +100,8 @@ export function* lexer(source_code) {
 			if (reserved_words.includes(ret)) {
 				yield ret;
 			} else {
-				yield new Identifier(ret);
+				yield new Ident(ret);
 			}
 		}
 	}
-	yield EOF;
-}
+}''
