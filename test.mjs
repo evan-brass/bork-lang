@@ -1,15 +1,16 @@
-import { lexer } from './lexer.mjs';
+import { lexer, Peekable } from './lexer.mjs';
+import { parse_expression } from './parser.mjs';
 
-const tests = [
-String.raw`class Breakfast {
-	init(meat, bread) {
-		this.meat = meat;
-		this.bread = bread;
-	}
-	// ..
-}`
-];
+// console.log(...lexer(String.raw`class Breakfast {
+// 	init(meat, bread) {
+// 		this.meat = meat;
+// 		this.bread = bread;
+// 	}
+// 	// ..
+// }`));
 
-for (const test of tests) {
-	console.log([...lexer(test)]);
-}
+const tokens = Array.from(lexer('(((4 + 9*2)))'));
+console.log(tokens);
+
+const expr = parse_expression(tokens);
+console.log(expr);
